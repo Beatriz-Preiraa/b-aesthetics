@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════════════════
+   B.aesthetics — Design Tokens
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Light Mode (default) */
+  --color-brand:         #F13E93;
+  --color-brand-muted:   #F875AA;
+  --color-brand-50:      #FFE4EF;
+  --color-brand-100:     #FFAAB8;
+  --color-brand-200:     #FE9EC7;
+  --color-brand-300:     #F891BB;
+
+  --bg-page:    #FFF8FB;
+  --bg-surface: #FFFFFF;
+  --bg-card:    #FFFFFF;
+  --bg-input:   #FFF0F7;
+
+  --text-primary:   #1A0A12;
+  --text-secondary: #6B3D55;
+  --text-muted:     #B07090;
+  --text-on-brand:  #FFFFFF;
+
+  --border-default: #F0C0D8;
+  --border-strong:  #E090BB;
+}
+
+.dark {
+  /* Dark Mode */
+  --color-brand:         #E80F88;
+  --color-brand-muted:   #E63E6D;
+  --color-brand-50:      #790252;
+  --color-brand-100:     #4C0033;
+
+  --bg-page:    #0D0008;
+  --bg-surface: #1A0011;
+  --bg-card:    #220016;
+  --bg-input:   #2A001E;
+
+  --text-primary:   #FFE4EF;
+  --text-secondary: #F891BB;
+  --text-muted:     #A0507A;
+  --text-on-brand:  #FFFFFF;
+
+  --border-default: #4C0033;
+  --border-strong:  #790252;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Base
+   ══════════════════════════════════════════════════════════════ */
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Reusable Component Classes
+   ══════════════════════════════════════════════════════════════ */
+@layer components {
+  /* Brand Button */
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white text-sm transition-all duration-200;
+    background: linear-gradient(135deg, var(--color-brand), var(--color-brand-muted));
+  }
+  .btn-brand:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(232, 15, 136, 0.4);
+  }
+  .btn-brand:active {
+    transform: translateY(0);
+  }
+
+  /* Ghost Button */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200;
+    color: var(--color-brand);
+    border: 1.5px solid var(--color-brand);
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    background: var(--color-brand-50);
+  }
+
+  /* Surface Card */
+  .card {
+    @apply rounded-2xl p-6 transition-all duration-200;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+  }
+  .card:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 8px 32px rgba(232, 15, 136, 0.12);
+  }
+
+  /* Input */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border-default);
+    color: var(--text-primary);
+  }
+  .input:focus {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgba(232, 15, 136, 0.15);
+  }
+  .input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Label */
+  .label {
+    @apply block text-xs font-semibold mb-1.5 tracking-wide uppercase;
+    color: var(--text-secondary);
+  }
+
+  /* Status Badge */
+  .badge-pending   { @apply inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300; }
+  .badge-completed { @apply inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300; }
+  .badge-cancelled { @apply inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300; }
+
+  /* Page Header */
+  .page-title {
+    @apply text-2xl font-bold tracking-tight;
+    color: var(--text-primary);
+  }
+  .page-subtitle {
+    @apply text-sm mt-1;
+    color: var(--text-muted);
+  }
+
+  /* Sidebar Nav Item */
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 cursor-pointer;
+    color: var(--text-secondary);
+  }
+  .nav-item:hover {
+    background: var(--color-brand-50);
+    color: var(--color-brand);
+  }
+  .nav-item.active {
+    color: var(--color-brand);
+    font-weight: 600;
+  }
+  .nav-item.active {
+    background: var(--color-brand-50);
+  }
+  .dark .nav-item.active {
+    background: rgba(232, 15, 136, 0.15);
+  }
+}

@@ -1,0 +1,121 @@
+// B.aesthetics — Database Schema
+// Stack: Next.js + Prisma + SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── ADMIN (Dono da Plataforma SaaS) ────────────────────────────────────────
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  globalAnnouncement String? // Aviso global para todas as lojas
+
+  @@map("admins")
+}
+
+// ─── USER / STORE (Microempreendedora) ──────────────────────────────────────
+model Store {
+  id        String @id @default(cuid())
+  slug      String @unique // URL pública: /nome-da-empresa
+  email     String @unique
+  password  String
+  name      String // Nome da empresa
+  ownerName String
+
+  // Dados Públicos
+  logoUrl       String?
+  address       String?
+  phone         String? // WhatsApp de contato
+  businessHours String? // Texto livre: "Seg-Sex: 9h-18h"
+  description   String?
+
+  // Controle SaaS
+  isActive    Boolean   @default(true) // Bloqueio pelo Admin
+  plan        String    @default("FREE") // FREE | PRO | PREMIUM
+  planExpires DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relações
+  services     Service[]
+  appointments Appointment[]
+  expenses     Expense[]
+
+  @@map("stores")
+}
+
+// ─── SERVICE (Serviços do Catálogo Público) ──────────────────────────────────
+model Service {
+  id      String @id @default(cuid())
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  imageUrl    String?
+  duration    Int     // Duração em minutos
+  price       Float   // Valor em R$
+  isActive    Boolean @default(true)
+  order       Int     @default(0) // Ordenação no catálogo
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+// ─── APPOINTMENT (Agenda / Fluxo de Caixa Manual) ───────────────────────────
+model Appointment {
+  id      String @id @default(cuid())
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  // Dados do Cliente
+  clientName  String
+  clientPhone String?
+
+  // Dados do Agendamento
+  scheduledAt DateTime
+  price       Float
+  notes       String?
+  status      String   @default("PENDING") // PENDING | COMPLETED | CANCELLED
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("appointments")
+}
+
+// ─── EXPENSE (Gestão de Despesas) ────────────────────────────────────────────
+model Expense {
+  id      String @id @default(cuid())
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  description String
+  amount      Float
+  date        DateTime
+  category    String? // ex: "Insumos", "Aluguel", "Marketing"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("expenses")
+}
