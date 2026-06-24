@@ -136,17 +136,17 @@ export default function ServicesManager() {
 
       {/* Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6"
           style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
           onClick={e => e.target === e.currentTarget && setShowForm(false)}>
-          <div className="w-full max-w-lg rounded-3xl p-6 max-h-[90vh] overflow-y-auto animate-slideUp"
+          <div className="w-full max-w-lg rounded-3xl p-6 max-h-[85vh] overflow-y-auto scrollbar-none animate-slideUp shadow-2xl"
             style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-default)' }}>
 
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-5 sticky top-0 pb-2 z-10" style={{ background: 'var(--bg-surface)' }}>
               <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
                 {editing ? 'Editar serviço' : 'Novo serviço'}
               </h2>
-              <button onClick={() => setShowForm(false)} style={{ color: 'var(--text-muted)' }}>✕</button>
+              <button onClick={() => setShowForm(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-zinc-800 transition-colors" style={{ color: 'var(--text-muted)' }}>✕</button>
             </div>
 
             <div className="space-y-4">
@@ -181,7 +181,7 @@ export default function ServicesManager() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pt-2">
                 <button type="button" onClick={() => setForm(f => ({ ...f, isActive: !f.isActive }))}
                   className="relative w-11 h-6 rounded-full transition-colors flex-shrink-0"
                   style={{ background: form.isActive ? 'var(--color-brand)' : 'var(--border-default)' }}>
@@ -194,7 +194,7 @@ export default function ServicesManager() {
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-6 sticky bottom-0 pt-3 z-10" style={{ background: 'var(--bg-surface)' }}>
               <button onClick={() => setShowForm(false)} className="btn-ghost flex-1">Cancelar</button>
               <button onClick={handleSave} disabled={saving || !form.name} className="btn-brand flex-1 disabled:opacity-60">
                 {saving ? 'Salvando...' : editing ? 'Salvar alterações' : 'Criar serviço'}
