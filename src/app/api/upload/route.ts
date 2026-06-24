@@ -29,23 +29,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Arquivo muito grande. Máximo 5 MB.' }, { status: 400 })
     }
 
+    // 🔥 CORREÇÃO: Convertendo para Buffer para o Supabase e a Vercel não se perderem na rota binária
     const bytes  = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+
     const ext    = file.type.split('/')[1].replace('jpeg', 'jpg')
-    
-    // Gerando o nome do arquivo diretamente na raiz do bucket para evitar caminhos inválidos
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
-    // Faz o upload usando parâmetros otimizados para o ambiente Next.js da Vercel
+    // Faz o upload passando o buffer tratado diretamente na raiz
     const { error: uploadError } = await supabase.storage
       .from('uploads')
-      .upload(filename, bytes, {
+      .upload(filename, buffer, {
         contentType: file.type,
-        duplex: 'half'
+        upsert: true
       })
 
     if (uploadError) {
       console.error('Erro interno do Supabase Storage:', uploadError)
-      throw uploadError
+      return NextResponse.json({ message: uploadError.message }, { status: 400 })
     }
 
     // Busca a URL pública definitiva do arquivo
