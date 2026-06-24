@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     const bytes  = await file.arrayBuffer()
     const ext      = file.type.split('/')[1].replace('jpeg', 'jpg')
-    const filename = `${auth.storeId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
     // Faz o upload direto para o bucket do Supabase chamado 'uploads'
     const { data, error } = await supabase.storage
