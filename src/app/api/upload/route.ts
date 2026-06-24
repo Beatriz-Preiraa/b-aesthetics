@@ -30,25 +30,30 @@ export async function POST(req: NextRequest) {
     }
 
     const bytes  = await file.arrayBuffer()
-    const ext      = file.type.split('/')[1].replace('jpeg', 'jpg')
+    const ext    = file.type.split('/')[1].replace('jpeg', 'jpg')
+    
+    // Gerando o nome do arquivo diretamente na raiz do bucket para evitar caminhos inválidos
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
-    // Faz o upload direto para o bucket do Supabase chamado 'uploads'
-    const { data, error } = await supabase.storage
+    // Faz o upload usando parâmetros otimizados para o ambiente Next.js da Vercel
+    const { error: uploadError } = await supabase.storage
       .from('uploads')
       .upload(filename, bytes, {
         contentType: file.type,
-        upsert: true
+        duplex: 'half'
       })
 
-    if (error) throw error
+    if (uploadError) {
+      console.error('Erro interno do Supabase Storage:', uploadError)
+      throw uploadError
+    }
 
-    // Gera a URL pública da imagem vinda do Supabase
-    const { data: { publicUrl } } = supabase.storage
+    // Busca a URL pública definitiva do arquivo
+    const { data: urlData } = supabase.storage
       .from('uploads')
       .getPublicUrl(filename)
 
-    return NextResponse.json({ url: publicUrl })
+    return NextResponse.json({ url: urlData.publicUrl })
   } catch (err) {
     console.error(err)
     return NextResponse.json({ message: 'Erro ao salvar imagem' }, { status: 500 })
