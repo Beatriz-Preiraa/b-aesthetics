@@ -14,6 +14,13 @@ interface Appointment {
   notes?: string
 }
 
+interface Service {
+  id: string
+  name: string
+  price: number
+  isActive: boolean
+}
+
 const fmt = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 
@@ -32,6 +39,7 @@ const EMPTY_FORM = {
 
 export default function AppointmentsManager() {
   const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [services, setServices] = useState<Service[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState<Appointment | null>(null)
@@ -52,7 +60,22 @@ export default function AppointmentsManager() {
     fetch(`/api/appointments?${params}`).then(r => r.json()).then(setAppointments).finally(() => setLoading(false))
   }
 
-  useEffect(() => { load() }, [from, to, statusFilter])
+  // Carrega os serviços cadastrados no sistema
+  const loadServices = () => {
+    fetch('/api/services')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setServices(data.filter(s => s.isActive))
+        }
+      })
+      .catch(err => console.error("Erro ao carregar serviços:", err))
+  }
+
+  useEffect(() => { 
+    load()
+    loadServices()
+  }, [from, to, statusFilter])
 
   const openNew = () => {
     setEditing(null)
@@ -223,11 +246,40 @@ export default function AppointmentsManager() {
                     onChange={e => setForm(f => ({ ...f, clientPhone: e.target.value }))} />
                 </div>
               </div>
+              
               <div>
                 <label className="label">Serviço</label>
-                <input className="input" placeholder="Ex: Lash Fio a Fio" value={form.serviceName}
-                  onChange={e => setForm(f => ({ ...f, serviceName: e.target.value }))} />
+                <select 
+                  className="input appearance-none bg-no-repeat bg-right pr-8"
+                  style={{ 
+                    backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>")`,
+                    backgroundPosition: 'calc(100% - 12px) 50%',
+                    backgroundSize: '16px'
+                  }}
+                  value={form.serviceName}
+                  onChange={e => {
+                    const selectedName = e.target.value
+                    const selectedService = services.find(s => s.name === selectedName)
+                    setForm(f => ({ 
+                      ...f, 
+                      serviceName: selectedName,
+                      price: selectedService ? selectedService.price : f.price 
+                    }))
+                  }}
+                >
+                  <option value="">Selecione um serviço...</option>
+                  {services.map(s => (
+                    <option key={s.id} value={s.name}>
+                      {s.name} ({fmt(s.price)})
+                    </option>
+                  ))}
+                  {/* Mantém compatibilidade caso o serviço antigo não esteja no catálogo atual */}
+                  {form.serviceName && !services.some(s => s.name === form.serviceName) && (
+                    <option value={form.serviceName}>{form.serviceName}</option>
+                  )}
+                </select>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="label">Data e horário *</label>
