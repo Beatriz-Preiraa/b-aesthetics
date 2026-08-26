@@ -54,7 +54,13 @@ function Sidebar({ active, onChange, mobile, onClose }: SidebarProps) {
             onClick={() => { onChange(item.key); onClose?.() }}
             className={`nav-item w-full${active === item.key ? ' active' : ''}`}
           >
-            <span className="text-base">{item.icon}</span>
+            <span className="w-5 h-5 flex items-center justify-center">
+            <img
+            src={item.icon}
+            alt=""
+            className="w-5 h-5"
+          />
+    </span>
             {item.label}
           </button>
         ))}
