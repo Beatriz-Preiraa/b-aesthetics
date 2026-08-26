@@ -104,7 +104,7 @@ export default function LoginPage() {
           </div>
           <h1
             className="text-2xl font-bold tracking-tight"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif', color: 'var(--text-primary)' }}
+            style={{ color: 'var(--text-primary)' }}
           >
             B.aesthetics
           </h1>
