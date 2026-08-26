@@ -4,11 +4,11 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/contexts/ThemeContext'
 
 const NAV_ITEMS = [
-  { key: 'overview',     icon: '◈', label: 'Visão Geral'    },
-  { key: 'services',     icon: '✦', label: 'Serviços'       },
-  { key: 'appointments', icon: '📅', label: 'Agenda'         },
-  { key: 'expenses',     icon: '💸', label: 'Despesas'       },
-  { key: 'profile',      icon: '⚙', label: 'Minha loja'     },
+  { key: 'overview', icon: '/icons/overview.svg', label: 'Visão Geral' },
+  { key: 'services', icon: '/icons/services.svg', label: 'Serviços' },
+  { key: 'appointments', icon: '/icons/appointments.svg', label: 'Agenda' },
+  { key: 'expenses', icon: '/icons/expenses.svg', label: 'Despesas' },
+  { key: 'profile', icon: '/icons/profile.svg', label: 'Minha loja' },
 ]
 
 interface SidebarProps {
@@ -34,7 +34,7 @@ function Sidebar({ active, onChange, mobile, onClose }: SidebarProps) {
           ✦
         </div>
         <div>
-          <p className="text-sm font-bold" style={{ fontFamily: 'Playfair Display, serif', color: 'var(--text-primary)' }}>
+          <p className="text-sm font-bold" style={{ fontFamily: 'Poppins, sans-serif', color: 'var(--text-primary)' }}>
             B.aesthetics
           </p>
           <p className="text-xs truncate max-w-[140px]" style={{ color: 'var(--text-muted)' }}>
@@ -125,7 +125,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <button onClick={() => setMobileOpen(true)} className="text-xl p-1" style={{ color: 'var(--text-secondary)' }}>
             ☰
           </button>
-          <span className="text-sm font-bold" style={{ fontFamily: 'Playfair Display, serif', color: 'var(--text-primary)' }}>
+          <span className="text-sm font-bold" style={{ fontFamily: 'Poppins, sans-serif', color: 'var(--text-primary)' }}>
             B.aesthetics
           </span>
           <div className="w-8" />
