@@ -4,11 +4,11 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTheme } from '@/contexts/ThemeContext'
 
 const NAV_ITEMS = [
-  { key: 'overview', icon: '/icons/overview.svg', label: 'Visão Geral' },
-  { key: 'services', icon: '/icons/services.svg', label: 'Serviços' },
-  { key: 'appointments', icon: '/icons/appointments.svg', label: 'Agenda' },
-  { key: 'expenses', icon: '/icons/expenses.svg', label: 'Despesas' },
-  { key: 'profile', icon: '/icons/profile.svg', label: 'Minha loja' },
+  { key: 'overview', icon: '◈', label: 'Visão Geral' },
+  { key: 'services', icon: '✦', label: 'Serviços' },
+  { key: 'appointments', icon: '📅', label: 'Agenda' },
+  { key: 'expenses', icon: '💸', label: 'Despesas' },
+  { key: 'profile', icon: '⚙', label: 'Minha loja' },
 ]
 
 interface SidebarProps {
